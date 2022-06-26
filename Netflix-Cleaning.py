@@ -12,7 +12,6 @@ df_pyspark = spark.read.csv('movies.csv', multiLine=True, header=True,inferSchem
 #Creating a seperate dataframe to work on
 df_pyspark_alter = df_pyspark.alias('df_pyspark_alter')
 
-
 regex_string_parenthesis = "(\\(|\\))"
 regex_string_newline = "(\n)"
 
@@ -29,12 +28,8 @@ df_pyspark_alter = df_pyspark_alter.select("MOVIES", "RATING", "VOTES", "RunTime
                 split_cols.getItem(0).alias('Director'),
                 split_cols.getItem(1).alias('Stars'))
 
-print(df_pyspark_alter.show(10))
-
 #Dropping the original Stars column
 df_pyspark_alter = df_pyspark_alter.drop('STARS-cleaned')
-
-print(df_pyspark_alter.show(10))
 
 #Replacing string and character from Director column
 regex_string_Dir_clean = "(\|)|Director:"
