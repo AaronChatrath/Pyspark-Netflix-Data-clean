@@ -36,5 +36,27 @@ df_pyspark_alter = df_pyspark_alter.drop('STARS-cleaned')
 
 print(df_pyspark_alter.show(10))
 
+regex_string_Dir_clean = "(\|)|Director:"
+df_pyspark_alter=df_pyspark_alter.withColumn("Director-cleaned",regexp_replace(col("Director"), regex_string_Dir_clean,""))
+
+print(df_pyspark_alter.show(10))
+
+print(df_pyspark_alter.select("GENRE-cleaned").show(20, False))
+
+df_pyspark_alter = df_pyspark_alter.drop('Director')
+
+print(df_pyspark_alter.show(10))
+
+df_pyspark_alter = df_pyspark_alter.withColumnRenamed("MOVIES", "Movies") \
+                    .withColumnRenamed("RATING", "Rating") \
+                    .withColumnRenamed("VOTES", "Votes") \
+                    .withColumnRenamed("YEAR_cleaned", "Year") \
+                    .withColumnRenamed("GENRE-cleaned", "Genre") \
+                    .withColumnRenamed("ONE-LINE-cleaned", "Summary") \
+                    .withColumnRenamed("Director-cleaned", "Director")
+
+df_pyspark_alter=df_pyspark_alter.na.drop("any", subset=["Rating", "Votes", "RunTime", "Year", "Genre"])
+
+print(df_pyspark_alter.show(50))
 
 spark.stop()
