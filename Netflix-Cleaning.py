@@ -36,17 +36,14 @@ df_pyspark_alter = df_pyspark_alter.drop('STARS-cleaned')
 
 print(df_pyspark_alter.show(10))
 
+#Replacing string and character from Director column
 regex_string_Dir_clean = "(\|)|Director:"
 df_pyspark_alter=df_pyspark_alter.withColumn("Director-cleaned",regexp_replace(col("Director"), regex_string_Dir_clean,""))
 
-print(df_pyspark_alter.show(10))
-
-print(df_pyspark_alter.select("GENRE-cleaned").show(20, False))
-
+#Further dropping of column not needed
 df_pyspark_alter = df_pyspark_alter.drop('Director')
 
-print(df_pyspark_alter.show(10))
-
+#Making table pretty with better namings
 df_pyspark_alter = df_pyspark_alter.withColumnRenamed("MOVIES", "Movies") \
                     .withColumnRenamed("RATING", "Rating") \
                     .withColumnRenamed("VOTES", "Votes") \
@@ -55,6 +52,7 @@ df_pyspark_alter = df_pyspark_alter.withColumnRenamed("MOVIES", "Movies") \
                     .withColumnRenamed("ONE-LINE-cleaned", "Summary") \
                     .withColumnRenamed("Director-cleaned", "Director")
 
+#Dropping records if there are any missing records from the subset columns
 df_pyspark_alter=df_pyspark_alter.na.drop("any", subset=["Rating", "Votes", "RunTime", "Year", "Genre"])
 
 print(df_pyspark_alter.show(50))
